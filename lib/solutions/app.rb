@@ -95,7 +95,7 @@ class App
     shop.make_purchase(Deal.new("V", 50))
     shop.make_purchase(Deal.new("U", 40))
     shop.make_purchase(Deal.new("T", 20))
-    shop.make_purchase(Deal.new("S", 30))
+    shop.make_purchase(Deal.new("S", 20))
     shop.make_purchase(Deal.new("R", 50))
     shop.make_purchase(Deal.new("Q", 30))
     shop.make_purchase(Deal.new("P", 50))

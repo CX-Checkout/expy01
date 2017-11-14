@@ -19,6 +19,7 @@ class ClientTest < Minitest::Test
     assert_equal(15, app.checkout("D"))
     assert_equal(40, app.checkout("E"))
     assert_equal(10, app.checkout("F"))
+    assert_equal(20, app.checkout("S"))
     assert_equal(17, app.checkout("X"))
     assert_equal(20, app.checkout("Y"))
     assert_equal(21, app.checkout("Z"))
@@ -65,5 +66,6 @@ class ClientTest < Minitest::Test
     assert_equal(66, app.checkout("ZZZZ"))
     assert_equal(62, app.checkout("STXS"))
     assert_equal(62, app.checkout("STXZ"))
+    assert_equal(65, app.checkout("SSSZ"))
   end
 end
