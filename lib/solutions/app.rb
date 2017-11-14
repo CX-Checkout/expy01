@@ -3,7 +3,8 @@ PRICES = {
     "B" => 30,
     "C" => 20,
     "D" => 15,
-    "E" => 40
+    "E" => 40,
+    "F" => 10,
 }
 
 OFFER = {
@@ -18,13 +19,26 @@ class App
     skus = sku_list.inject(Hash.new(0)) { |total, e| total[e] += 1; total }
     total = 0
 
+    # A
 
     five_offers_for_a = (skus.fetch("A", 0) / 5)
     total += five_offers_for_a * 200
     skus["A"] = skus["A"] - 5 * five_offers_for_a
 
+    # E
+
     free_b_entitlement = (skus.fetch("E", 0) / 2)
     skus["B"] = [skus["B"] - free_b_entitlement, 0].max
+
+    # F
+
+    three_offer_for_f = (skus.fetch("F", 0) / 3)
+    total += three_offer_for_f * 20
+    skus["F"] = skus["F"] - 3 * three_offer_for_f
+
+
+    price_for_f = skus.fetch("F", 0) * PRICES.fetch("F")
+    total += price_for_f
 
     #RUBBISH
     offer_price_for_a = (skus.fetch("A", 0) / 3) * 130

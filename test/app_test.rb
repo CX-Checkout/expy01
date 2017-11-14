@@ -18,6 +18,7 @@ class ClientTest < Minitest::Test
     assert_equal(20, app.checkout("C"))
     assert_equal(15, app.checkout("D"))
     assert_equal(40, app.checkout("E"))
+    assert_equal(10, app.checkout("F"))
   end
 
   def test_empty_basket_costs_nothing
@@ -34,6 +35,7 @@ class ClientTest < Minitest::Test
     assert_equal(180, app.checkout("AAAA"))
     assert_equal(90, app.checkout("BBBB"))
     assert_equal(145, app.checkout("AAAD"))
+    assert_equal(20, app.checkout("FFF"))
   end
 
   def test_returns_minus_one_for_invalid_input
