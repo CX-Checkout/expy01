@@ -1,61 +1,109 @@
-PRICES = {
-    "A" => 50,
-    "B" => 30,
-    "C" => 20,
-    "D" => 15,
-    "E" => 40,
-    "F" => 10,
-}
+EMPTY_BASKET = ("A".."Z").map{|l| [l, 0]}.to_h.freeze
 
-OFFER = {
-    "A" => [3, 130],
-    "B" => [2, 45]
-}
+class Basket
+  def initialize(sku_string)
+    new_items = sku_string.chars.group_by{ |sku| sku }
+    raise ArgumentError, "Invalid skus" unless (new_items.keys - EMPTY_BASKET.keys).empty?
+    @contents = EMPTY_BASKET.merge(new_items) do |key, existing, added|
+      existing + added.count
+    end
+  end
+
+  def empty?
+    @contents == EMPTY_BASKET
+  end
+
+  def quantity_of(sku)
+    @contents.fetch(sku)
+  end
+
+  def remove_items(sku_string)
+    new_items = sku_string.chars.group_by{ |sku| sku }
+    raise ArgumentError, "Invalid skus" unless (new_items.keys - EMPTY_BASKET.keys).empty?
+    new_contents = @contents.merge(new_items) do |k, existing, new|
+      value = existing - new.count
+    end
+    new_string = new_contents.reduce("") { |total, (k, v)| total + (k * v) }
+    Basket.new(new_string)
+  end
+end
+
+class Shop
+  def initialize(basket)
+    @total = 0
+    @basket = basket
+  end
+
+  attr_reader :total
+
+  def make_purchase(deal)
+    @basket = @basket.remove_items(deal.items)
+    @total += deal.price
+    make_purchase(deal)
+  rescue ArgumentError
+
+  end
+end
+
+class Deal
+  def initialize(items, price)
+    @items = items
+    @price = price
+  end
+
+  attr_reader :items, :price
+end
 
 class App
-  def checkout(basket)
-    sku_list = basket.split("")
-    return -1 unless sku_list.all? { |x| PRICES.keys.include?(x) }
-    skus = sku_list.inject(Hash.new(0)) { |total, e| total[e] += 1; total }
-    total = 0
 
-    # A
-
-    five_offers_for_a = (skus.fetch("A", 0) / 5)
-    total += five_offers_for_a * 200
-    skus["A"] = skus["A"] - 5 * five_offers_for_a
-
-    # E
-
-    free_b_entitlement = (skus.fetch("E", 0) / 2)
-    skus["B"] = [skus["B"] - free_b_entitlement, 0].max
-
-    # F
-
-    three_offer_for_f = (skus.fetch("F", 0) / 3)
-    total += three_offer_for_f * 20
-    skus["F"] = skus["F"] - 3 * three_offer_for_f
-
-
-    price_for_f = skus.fetch("F", 0) * PRICES.fetch("F")
-    total += price_for_f
-
-    #RUBBISH
-    offer_price_for_a = (skus.fetch("A", 0) / 3) * 130
-    offer_price_for_b = (skus.fetch("B", 0) / 2) * 45
-    remaining_price_for_a = (skus.fetch("A", 0) % 3) * 50
-    remaining_price_for_b = (skus.fetch("B", 0) % 2) * 30
-    price_for_c = skus.fetch("C", 0) * 20
-    price_for_d = skus.fetch("D", 0) * 15
-    price_for_e = skus.fetch("E", 0) * PRICES.fetch("E")
-
-    total +
-    offer_price_for_a +
-    offer_price_for_b +
-    remaining_price_for_a +
-    remaining_price_for_b +
-    price_for_c +
-    price_for_d +
-    price_for_e
+  def checkout(items)
+    begin
+      basket = Basket.new(items)
+    rescue ArgumentError
+      return -1
+    end
+    shop = Shop.new(basket)
+    shop.make_purchase(Deal.new("VVV", 130))
+    shop.make_purchase(Deal.new("VV", 90))
+    shop.make_purchase(Deal.new("UUUU", 120))
+    shop.make_purchase(Deal.new("RRRQ", 150))
+    shop.make_purchase(Deal.new("QQQ", 80))
+    shop.make_purchase(Deal.new("PPPPP", 200))
+    shop.make_purchase(Deal.new("NNNM", 120))
+    shop.make_purchase(Deal.new("KK", 150))
+    shop.make_purchase(Deal.new("HHHHHHHHHH", 80))
+    shop.make_purchase(Deal.new("HHHHH", 45))
+    shop.make_purchase(Deal.new("FFF", 20))
+    shop.make_purchase(Deal.new("EEB", 80))
+    shop.make_purchase(Deal.new("BB", 45))
+    shop.make_purchase(Deal.new("A" * 5, 200))
+    shop.make_purchase(Deal.new("A" * 3, 130))
+    shop.make_purchase(Deal.new("Z", 50))
+    shop.make_purchase(Deal.new("Y", 10))
+    shop.make_purchase(Deal.new("X", 90))
+    shop.make_purchase(Deal.new("W", 20))
+    shop.make_purchase(Deal.new("V", 50))
+    shop.make_purchase(Deal.new("U", 40))
+    shop.make_purchase(Deal.new("T", 20))
+    shop.make_purchase(Deal.new("S", 30))
+    shop.make_purchase(Deal.new("R", 50))
+    shop.make_purchase(Deal.new("Q", 30))
+    shop.make_purchase(Deal.new("P", 50))
+    shop.make_purchase(Deal.new("O", 10))
+    shop.make_purchase(Deal.new("N", 40))
+    shop.make_purchase(Deal.new("M", 15))
+    shop.make_purchase(Deal.new("L", 90))
+    shop.make_purchase(Deal.new("K", 80))
+    shop.make_purchase(Deal.new("J", 60))
+    shop.make_purchase(Deal.new("I", 35))
+    shop.make_purchase(Deal.new("H", 10))
+    shop.make_purchase(Deal.new("G", 20))
+    shop.make_purchase(Deal.new("F", 10))
+    shop.make_purchase(Deal.new("E", 40))
+    shop.make_purchase(Deal.new("D", 15))
+    shop.make_purchase(Deal.new("C", 20))
+    shop.make_purchase(Deal.new("B", 30))
+    shop.make_purchase(Deal.new("A", 50))
+    shop.total
   end
 end
