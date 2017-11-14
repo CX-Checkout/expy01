@@ -63,6 +63,16 @@ class App
       return -1
     end
     shop = Shop.new(basket)
+
+    choice_deal_items = ["Z", "Y", "T", "S", "X"]
+    c = choice_deal_items
+
+    combinations = c.map { |x| c.map { |y| c.map { |z| [x, y, z].join } } }.flatten
+
+    combinations.each do |combo|
+      shop.make_purchase(Deal.new(combo, 45))
+    end
+
     shop.make_purchase(Deal.new("VVV", 130))
     shop.make_purchase(Deal.new("VV", 90))
     shop.make_purchase(Deal.new("UUUU", 120))
@@ -70,7 +80,7 @@ class App
     shop.make_purchase(Deal.new("QQQ", 80))
     shop.make_purchase(Deal.new("PPPPP", 200))
     shop.make_purchase(Deal.new("NNNM", 120))
-    shop.make_purchase(Deal.new("KK", 150))
+    shop.make_purchase(Deal.new("KK", 120))
     shop.make_purchase(Deal.new("HHHHHHHHHH", 80))
     shop.make_purchase(Deal.new("HHHHH", 45))
     shop.make_purchase(Deal.new("FFF", 20))
@@ -78,9 +88,9 @@ class App
     shop.make_purchase(Deal.new("BB", 45))
     shop.make_purchase(Deal.new("A" * 5, 200))
     shop.make_purchase(Deal.new("A" * 3, 130))
-    shop.make_purchase(Deal.new("Z", 50))
-    shop.make_purchase(Deal.new("Y", 10))
-    shop.make_purchase(Deal.new("X", 90))
+    shop.make_purchase(Deal.new("Z", 21))
+    shop.make_purchase(Deal.new("Y", 20))
+    shop.make_purchase(Deal.new("X", 17))
     shop.make_purchase(Deal.new("W", 20))
     shop.make_purchase(Deal.new("V", 50))
     shop.make_purchase(Deal.new("U", 40))
@@ -93,7 +103,7 @@ class App
     shop.make_purchase(Deal.new("N", 40))
     shop.make_purchase(Deal.new("M", 15))
     shop.make_purchase(Deal.new("L", 90))
-    shop.make_purchase(Deal.new("K", 80))
+    shop.make_purchase(Deal.new("K", 70))
     shop.make_purchase(Deal.new("J", 60))
     shop.make_purchase(Deal.new("I", 35))
     shop.make_purchase(Deal.new("H", 10))
